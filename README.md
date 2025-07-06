@@ -172,3 +172,29 @@ const RSS_PORT = 8000;
 console.log(`RSS server running at http://localhost:${RSS_PORT}/rss`);
 await serve(handleRequest, { port: RSS_PORT });
 ```
+
+1. 构建 Docker 镜像：
+   ```dockerfile
+   FROM denoland/deno:latest
+   WORKDIR /app
+   COPY . .
+   RUN deno cache server.ts
+   EXPOSE 8000
+   CMD ["deno", "run", "--allow-net", "server.ts"]
+   ```
+
+2. 使用 Docker Compose：
+   ```yaml
+   version: '3'
+   services:
+     rss:
+       build: .
+       ports:
+         - "8000:8000"
+   ```
+
+3. 启动并后台运行：
+   ```bash
+   docker-compose up -d
+   ```
+4. 访问 http://服务器IP:8000/rss?channel=xxx
